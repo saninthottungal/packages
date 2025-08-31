@@ -8,9 +8,12 @@ import android.content.Context;
 import android.view.Surface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.VisibleForTesting;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import io.flutter.plugins.videoplayer.ExoPlayerEventListener;
 import io.flutter.plugins.videoplayer.VideoAsset;
@@ -39,6 +42,7 @@ public final class TextureVideoPlayer extends VideoPlayer implements SurfaceProd
    * @param options options for playback.
    * @return a video player instance.
    */
+  @OptIn(markerClass = UnstableApi.class)
   @NonNull
   public static TextureVideoPlayer create(
       @NonNull Context context,
@@ -52,8 +56,9 @@ public final class TextureVideoPlayer extends VideoPlayer implements SurfaceProd
         asset.getMediaItem(),
         options,
         () -> {
+          DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(2000, 5000, 1500, 2000).build();
           ExoPlayer.Builder builder =
-              new ExoPlayer.Builder(context)
+              new ExoPlayer.Builder(context).setLoadControl(loadControl)
                   .setMediaSourceFactory(asset.getMediaSourceFactory(context));
           return builder.build();
         });
