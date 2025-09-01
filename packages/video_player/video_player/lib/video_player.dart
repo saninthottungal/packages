@@ -12,15 +12,7 @@ import 'package:video_player_platform_interface/video_player_platform_interface.
 
 import 'src/closed_caption_file.dart';
 
-export 'package:video_player_platform_interface/video_player_platform_interface.dart'
-    show
-        DataSourceType,
-        DurationRange,
-        VideoFormat,
-        VideoPlayerOptions,
-        VideoPlayerWebOptions,
-        VideoPlayerWebOptionsControls,
-        VideoViewType;
+export 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 export 'src/closed_caption_file.dart';
 
