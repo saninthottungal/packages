@@ -6,6 +6,7 @@ package io.flutter.plugins.videoplayer.texture;
 
 import android.content.Context;
 import android.view.Surface;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
@@ -15,7 +16,9 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
+
 import io.flutter.plugins.videoplayer.ExoPlayerEventListener;
+import io.flutter.plugins.videoplayer.Messages;
 import io.flutter.plugins.videoplayer.VideoAsset;
 import io.flutter.plugins.videoplayer.VideoPlayer;
 import io.flutter.plugins.videoplayer.VideoPlayerCallbacks;
@@ -30,91 +33,94 @@ import io.flutter.view.TextureRegistry.SurfaceProducer;
  * the texture.
  */
 public final class TextureVideoPlayer extends VideoPlayer implements SurfaceProducer.Callback {
-  // True when the ExoPlayer instance has a null surface.
-  private boolean needsSurface = true;
-  /**
-   * Creates a texture video player.
-   *
-   * @param context application context.
-   * @param events event callbacks.
-   * @param surfaceProducer produces a texture to render to.
-   * @param asset asset to play.
-   * @param options options for playback.
-   * @return a video player instance.
-   */
-  @OptIn(markerClass = UnstableApi.class)
-  @NonNull
-  public static TextureVideoPlayer create(
-      @NonNull Context context,
-      @NonNull VideoPlayerCallbacks events,
-      @NonNull SurfaceProducer surfaceProducer,
-      @NonNull VideoAsset asset,
-      @NonNull VideoPlayerOptions options) {
-    return new TextureVideoPlayer(
-        events,
-        surfaceProducer,
-        asset.getMediaItem(),
-        options,
-        () -> {
-          DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(2000, 5000, 1500, 2000).build();
-          ExoPlayer.Builder builder =
-              new ExoPlayer.Builder(context).setLoadControl(loadControl)
-                  .setMediaSourceFactory(asset.getMediaSourceFactory(context));
-          return builder.build();
-        });
-  }
+    // True when the ExoPlayer instance has a null surface.
+    private boolean needsSurface = true;
 
-  @VisibleForTesting
-  public TextureVideoPlayer(
-      @NonNull VideoPlayerCallbacks events,
-      @NonNull SurfaceProducer surfaceProducer,
-      @NonNull MediaItem mediaItem,
-      @NonNull VideoPlayerOptions options,
-      @NonNull ExoPlayerProvider exoPlayerProvider) {
-    super(events, mediaItem, options, surfaceProducer, exoPlayerProvider);
-
-    surfaceProducer.setCallback(this);
-
-    Surface surface = surfaceProducer.getSurface();
-    this.exoPlayer.setVideoSurface(surface);
-    needsSurface = surface == null;
-  }
-
-  @NonNull
-  @Override
-  protected ExoPlayerEventListener createExoPlayerEventListener(
-      @NonNull ExoPlayer exoPlayer, @Nullable SurfaceProducer surfaceProducer) {
-    if (surfaceProducer == null) {
-      throw new IllegalArgumentException(
-          "surfaceProducer cannot be null to create an ExoPlayerEventListener for TextureVideoPlayer.");
+    /**
+     * Creates a texture video player.
+     *
+     * @param context         application context.
+     * @param events          event callbacks.
+     * @param surfaceProducer produces a texture to render to.
+     * @param asset           asset to play.
+     * @param options         options for playback.
+     * @return a video player instance.
+     */
+    @OptIn(markerClass = UnstableApi.class)
+    @NonNull
+    public static TextureVideoPlayer create(
+            @NonNull Context context,
+            @NonNull VideoPlayerCallbacks events,
+            @NonNull SurfaceProducer surfaceProducer,
+            @NonNull VideoAsset asset,
+            @NonNull VideoPlayerOptions options, @NonNull Messages.BufferConfigNative bufferConfig) {
+        return new TextureVideoPlayer(
+                events,
+                surfaceProducer,
+                asset.getMediaItem(),
+                options,
+                () -> {
+                    DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
+                            .setBufferDurationsMs(bufferConfig.getMinBuffer().intValue(), bufferConfig.getMaxBuffer().intValue(), bufferConfig.getBufferForPlayback().intValue(), bufferConfig.getBufferForPlaybackAfterRebuffer().intValue())
+                            .build();
+                    ExoPlayer.Builder builder =
+                            new ExoPlayer.Builder(context).setLoadControl(loadControl)
+                                    .setMediaSourceFactory(asset.getMediaSourceFactory(context));
+                    return builder.build();
+                });
     }
-    boolean surfaceProducerHandlesCropAndRotation = surfaceProducer.handlesCropAndRotation();
-    return new TextureExoPlayerEventListener(
-        exoPlayer, videoPlayerEvents, surfaceProducerHandlesCropAndRotation);
-  }
 
-  @RestrictTo(RestrictTo.Scope.LIBRARY)
-  public void onSurfaceAvailable() {
-    if (needsSurface) {
-      // TextureVideoPlayer must always set a surfaceProducer.
-      assert surfaceProducer != null;
-      exoPlayer.setVideoSurface(surfaceProducer.getSurface());
-      needsSurface = false;
+    @VisibleForTesting
+    public TextureVideoPlayer(
+            @NonNull VideoPlayerCallbacks events,
+            @NonNull SurfaceProducer surfaceProducer,
+            @NonNull MediaItem mediaItem,
+            @NonNull VideoPlayerOptions options,
+            @NonNull ExoPlayerProvider exoPlayerProvider) {
+        super(events, mediaItem, options, surfaceProducer, exoPlayerProvider);
+
+        surfaceProducer.setCallback(this);
+
+        Surface surface = surfaceProducer.getSurface();
+        this.exoPlayer.setVideoSurface(surface);
+        needsSurface = surface == null;
     }
-  }
 
-  @RestrictTo(RestrictTo.Scope.LIBRARY)
-  public void onSurfaceCleanup() {
-    exoPlayer.setVideoSurface(null);
-    needsSurface = true;
-  }
+    @NonNull
+    @Override
+    protected ExoPlayerEventListener createExoPlayerEventListener(
+            @NonNull ExoPlayer exoPlayer, @Nullable SurfaceProducer surfaceProducer) {
+        if (surfaceProducer == null) {
+            throw new IllegalArgumentException(
+                    "surfaceProducer cannot be null to create an ExoPlayerEventListener for TextureVideoPlayer.");
+        }
+        boolean surfaceProducerHandlesCropAndRotation = surfaceProducer.handlesCropAndRotation();
+        return new TextureExoPlayerEventListener(
+                exoPlayer, videoPlayerEvents, surfaceProducerHandlesCropAndRotation);
+    }
 
-  public void dispose() {
-    // Super must be called first to ensure the player is released before the surface.
-    super.dispose();
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public void onSurfaceAvailable() {
+        if (needsSurface) {
+            // TextureVideoPlayer must always set a surfaceProducer.
+            assert surfaceProducer != null;
+            exoPlayer.setVideoSurface(surfaceProducer.getSurface());
+            needsSurface = false;
+        }
+    }
 
-    // TextureVideoPlayer must always set a surfaceProducer.
-    assert surfaceProducer != null;
-    surfaceProducer.release();
-  }
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public void onSurfaceCleanup() {
+        exoPlayer.setVideoSurface(null);
+        needsSurface = true;
+    }
+
+    public void dispose() {
+        // Super must be called first to ensure the player is released before the surface.
+        super.dispose();
+
+        // TextureVideoPlayer must always set a surfaceProducer.
+        assert surfaceProducer != null;
+        surfaceProducer.release();
+    }
 }
