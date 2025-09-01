@@ -72,6 +72,9 @@ class AndroidVideoPlayer extends VideoPlayerPlatform {
   @override
   Future<int?> createWithOptions(VideoCreationOptions options) async {
     final DataSource dataSource = options.dataSource;
+    final BufferConfigNative bufferConfig = _getConfig(
+      options.bufferConfig.androidConfig,
+    );
 
     String? uri;
     PlatformVideoFormat? formatHint;
@@ -105,6 +108,7 @@ class AndroidVideoPlayer extends VideoPlayerPlatform {
       httpHeaders: httpHeaders,
       userAgent: userAgent,
       formatHint: formatHint,
+      bufferConfig: bufferConfig,
       viewType: _platformVideoViewTypeFromVideoViewType(options.viewType),
     );
 
@@ -231,6 +235,15 @@ class AndroidVideoPlayer extends VideoPlayerPlatform {
       _ => null,
     };
   }
+}
+
+BufferConfigNative _getConfig(AndroidBufferConfig config) {
+  return BufferConfigNative(
+    minBuffer: config.minBuffer,
+    maxBuffer: config.maxBuffer,
+    bufferForPlayback: config.bufferForPlayback,
+    bufferForPlaybackAfterRebuffer: config.bufferForPlaybackAfterRebuffer,
+  );
 }
 
 PlatformVideoViewType _platformVideoViewTypeFromVideoViewType(
