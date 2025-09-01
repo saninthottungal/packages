@@ -92,6 +92,7 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
   @Override
   public @NonNull Long create(@NonNull CreateMessage arg) {
     final @NonNull String uri = arg.getUri();
+   final Messages.BufferConfigNative bufferConfig =  arg.getBufferConfig();
     final VideoAsset videoAsset;
     if (uri.startsWith("asset:")) {
       videoAsset = VideoAsset.fromAssetUrl(uri);
@@ -126,7 +127,7 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
               flutterState.applicationContext,
               VideoPlayerEventCallbacks.bindTo(createEventChannel(id)),
               videoAsset,
-              options);
+              options,bufferConfig);
     } else {
       TextureRegistry.SurfaceProducer handle = flutterState.textureRegistry.createSurfaceProducer();
       id = handle.id();
