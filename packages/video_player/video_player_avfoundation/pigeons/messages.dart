@@ -29,12 +29,12 @@ class CreationOptions {
   CreationOptions({
     required this.uri,
     required this.httpHeaders,
-    required this.bufferConfig,
+    this.bufferConfig = const BufferConfigNative(),
   });
 
   String uri;
   Map<String, String> httpHeaders;
-  final BufferConfigNative bufferConfig;
+  BufferConfigNative bufferConfig;
 }
 
 class BufferConfigNative {
