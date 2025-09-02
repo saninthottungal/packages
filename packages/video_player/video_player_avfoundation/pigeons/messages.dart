@@ -38,14 +38,15 @@ class CreationOptions {
 }
 
 class BufferConfigNative {
-  const BufferConfigNative({
+  BufferConfigNative({
     this.preferredPeakBitRate,
     this.preferredForwardBufferDuration,
     this.canUseNetworkResourcesForLiveStreamingWhilePaused,
   });
-  final double? preferredPeakBitRate;
-  final double? preferredForwardBufferDuration;
-  final bool? canUseNetworkResourcesForLiveStreamingWhilePaused;
+
+  double? preferredPeakBitRate;
+  double? preferredForwardBufferDuration;
+  bool? canUseNetworkResourcesForLiveStreamingWhilePaused;
 }
 
 class TexturePlayerIds {
