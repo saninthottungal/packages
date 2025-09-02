@@ -26,10 +26,26 @@ class PlatformVideoViewCreationParams {
 }
 
 class CreationOptions {
-  CreationOptions({required this.uri, required this.httpHeaders});
+  CreationOptions({
+    required this.uri,
+    required this.httpHeaders,
+    required this.bufferConfig,
+  });
 
   String uri;
   Map<String, String> httpHeaders;
+  final BufferConfigNative bufferConfig;
+}
+
+class BufferConfigNative {
+  BufferConfigNative({
+    this.preferredPeakBitRate = 0,
+    this.preferredForwardBufferDuration = 0,
+    this.canUseNetworkResourcesForLiveStreamingWhilePaused = false,
+  });
+  final double preferredPeakBitRate;
+  final double preferredForwardBufferDuration;
+  final bool canUseNetworkResourcesForLiveStreamingWhilePaused;
 }
 
 class TexturePlayerIds {
