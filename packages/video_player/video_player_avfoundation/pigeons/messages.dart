@@ -38,7 +38,7 @@ class CreationOptions {
 }
 
 class BufferConfigNative {
-  BufferConfigNative({
+  const BufferConfigNative({
     this.preferredPeakBitRate = 0,
     this.preferredForwardBufferDuration = 0,
     this.canUseNetworkResourcesForLiveStreamingWhilePaused = false,
