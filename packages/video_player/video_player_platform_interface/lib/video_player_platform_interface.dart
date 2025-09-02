@@ -537,10 +537,16 @@ class VideoCreationOptions {
 /// Buffer configuration
 class BufferConfig {
   /// default constructor for Buffer Configuration
-  const BufferConfig({this.androidConfig = const AndroidBufferConfig()});
+  const BufferConfig({
+    this.androidConfig = const AndroidBufferConfig(),
+    this.darwinBufferConfig = const DarwinBufferConfig(),
+  });
 
   /// Buffer configuration for android
   final AndroidBufferConfig androidConfig;
+
+  /// Buffer configuration for ios/macos
+  final DarwinBufferConfig darwinBufferConfig;
 }
 
 /// Buffer configuration for android
@@ -567,4 +573,25 @@ class AndroidBufferConfig {
   ///The default duration of media that must be buffered for playback to resume after a rebuffer, in milliseconds.
   ///A rebuffer is defined to be caused by buffer depletion rather than a user action.
   final int bufferForPlaybackAfterRebuffer;
+}
+
+/// Buffer configuration for Ios/macOS
+class DarwinBufferConfig {
+  /// default constructor for Buffer configuration for Ios/macOS
+  const DarwinBufferConfig({
+    this.preferredPeakBitRate = 0,
+    this.preferredForwardBufferDuration = 0,
+    this.canUseNetworkResourcesForLiveStreamingWhilePaused = false,
+  });
+
+  /// The desired limit, in bits per second, of network bandwidth consumption for this item
+  final double preferredPeakBitRate;
+
+  /// The duration the player should buffer media from the network ahead of
+  /// the playhead to guard against playback disruption.
+  final double preferredForwardBufferDuration;
+
+  /// A Boolean value that indicates whether the player item can use network
+  /// resources to keep the playback state up to date while paused.
+  final bool canUseNetworkResourcesForLiveStreamingWhilePaused;
 }
