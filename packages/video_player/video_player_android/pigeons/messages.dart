@@ -28,27 +28,27 @@ class PlatformVideoViewCreationParams {
 
 class BufferConfigNative {
   /// default constructor for Buffer configuration for android
-  const BufferConfigNative({
-    this.minBuffer = 50000,
-    this.maxBuffer = 50000,
-    this.bufferForPlayback = 2500,
-    this.bufferForPlaybackAfterRebuffer = 5000,
+  BufferConfigNative({
+    required this.minBuffer,
+    required this.maxBuffer,
+    required this.bufferForPlayback,
+    required this.bufferForPlaybackAfterRebuffer,
   });
 
   ///The minimum duration of media that the player will
   ///attempt to ensure is buffered at all times, in milliseconds.
-  final int minBuffer;
+  int minBuffer;
 
   /// The maximum duration of media that the player will attempt to buffer, in milliseconds.
-  final int maxBuffer;
+  int maxBuffer;
 
   /// The default duration of media that must be buffered for playback
   /// to start or resume following a user action such as a seek, in milliseconds.
-  final int bufferForPlayback;
+  int bufferForPlayback;
 
   ///The default duration of media that must be buffered for playback to resume after a rebuffer, in milliseconds.
   ///A rebuffer is defined to be caused by buffer depletion rather than a user action.
-  final int bufferForPlaybackAfterRebuffer;
+  int bufferForPlaybackAfterRebuffer;
 }
 
 class CreateMessage {
