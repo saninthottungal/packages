@@ -38,14 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FVPBufferConfigNative : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithPreferredPeakBitRate:(double )preferredPeakBitRate
-    preferredForwardBufferDuration:(double )preferredForwardBufferDuration
-    canUseNetworkResourcesForLiveStreamingWhilePaused:(BOOL )canUseNetworkResourcesForLiveStreamingWhilePaused;
-@property(nonatomic, assign) double  preferredPeakBitRate;
-@property(nonatomic, assign) double  preferredForwardBufferDuration;
-@property(nonatomic, assign) BOOL  canUseNetworkResourcesForLiveStreamingWhilePaused;
++ (instancetype)makeWithPreferredPeakBitRate:(nullable NSNumber *)preferredPeakBitRate
+    preferredForwardBufferDuration:(nullable NSNumber *)preferredForwardBufferDuration
+    canUseNetworkResourcesForLiveStreamingWhilePaused:(nullable NSNumber *)canUseNetworkResourcesForLiveStreamingWhilePaused;
+@property(nonatomic, strong, nullable) NSNumber * preferredPeakBitRate;
+@property(nonatomic, strong, nullable) NSNumber * preferredForwardBufferDuration;
+@property(nonatomic, strong, nullable) NSNumber * canUseNetworkResourcesForLiveStreamingWhilePaused;
 @end
 
 @interface FVPTexturePlayerIds : NSObject

@@ -127,16 +127,16 @@ class CreationOptions {
 
 class BufferConfigNative {
   BufferConfigNative({
-    this.preferredPeakBitRate = 0,
-    this.preferredForwardBufferDuration = 0,
-    this.canUseNetworkResourcesForLiveStreamingWhilePaused = false,
+    this.preferredPeakBitRate,
+    this.preferredForwardBufferDuration,
+    this.canUseNetworkResourcesForLiveStreamingWhilePaused,
   });
 
-  double preferredPeakBitRate;
+  double? preferredPeakBitRate;
 
-  double preferredForwardBufferDuration;
+  double? preferredForwardBufferDuration;
 
-  bool canUseNetworkResourcesForLiveStreamingWhilePaused;
+  bool? canUseNetworkResourcesForLiveStreamingWhilePaused;
 
   List<Object?> _toList() {
     return <Object?>[
@@ -152,9 +152,9 @@ class BufferConfigNative {
   static BufferConfigNative decode(Object result) {
     result as List<Object?>;
     return BufferConfigNative(
-      preferredPeakBitRate: result[0]! as double,
-      preferredForwardBufferDuration: result[1]! as double,
-      canUseNetworkResourcesForLiveStreamingWhilePaused: result[2]! as bool,
+      preferredPeakBitRate: result[0] as double?,
+      preferredForwardBufferDuration: result[1] as double?,
+      canUseNetworkResourcesForLiveStreamingWhilePaused: result[2] as bool?,
     );
   }
 

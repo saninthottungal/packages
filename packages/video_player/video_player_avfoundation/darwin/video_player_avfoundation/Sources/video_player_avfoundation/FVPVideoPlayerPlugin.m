@@ -275,9 +275,18 @@ static void upgradeAudioSessionCategory(AVAudioSessionCategory requestedCategory
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
     
     /// setting buffer properties here:
-    item.preferredForwardBufferDuration = bufferConfig.preferredForwardBufferDuration;
-    item.preferredPeakBitRate = bufferConfig.preferredPeakBitRate;
-    item.canUseNetworkResourcesForLiveStreamingWhilePaused = bufferConfig.canUseNetworkResourcesForLiveStreamingWhilePaused;
+    if(bufferConfig.preferredForwardBufferDuration != nil){
+        item.preferredForwardBufferDuration = bufferConfig.preferredForwardBufferDuration.doubleValue;
+    }
+   
+    if( bufferConfig.preferredPeakBitRate != nil){
+        item.preferredPeakBitRate = bufferConfig.preferredPeakBitRate.doubleValue;
+    }
+    
+    if(bufferConfig.canUseNetworkResourcesForLiveStreamingWhilePaused != nil){
+        item.canUseNetworkResourcesForLiveStreamingWhilePaused = bufferConfig.canUseNetworkResourcesForLiveStreamingWhilePaused.boolValue;
+    }
+   
     
   return item;
 }

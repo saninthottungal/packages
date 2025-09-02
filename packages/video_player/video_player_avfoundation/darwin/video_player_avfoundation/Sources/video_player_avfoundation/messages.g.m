@@ -105,9 +105,9 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @end
 
 @implementation FVPBufferConfigNative
-+ (instancetype)makeWithPreferredPeakBitRate:(double )preferredPeakBitRate
-    preferredForwardBufferDuration:(double )preferredForwardBufferDuration
-    canUseNetworkResourcesForLiveStreamingWhilePaused:(BOOL )canUseNetworkResourcesForLiveStreamingWhilePaused {
++ (instancetype)makeWithPreferredPeakBitRate:(nullable NSNumber *)preferredPeakBitRate
+    preferredForwardBufferDuration:(nullable NSNumber *)preferredForwardBufferDuration
+    canUseNetworkResourcesForLiveStreamingWhilePaused:(nullable NSNumber *)canUseNetworkResourcesForLiveStreamingWhilePaused {
   FVPBufferConfigNative* pigeonResult = [[FVPBufferConfigNative alloc] init];
   pigeonResult.preferredPeakBitRate = preferredPeakBitRate;
   pigeonResult.preferredForwardBufferDuration = preferredForwardBufferDuration;
@@ -116,9 +116,9 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 + (FVPBufferConfigNative *)fromList:(NSArray<id> *)list {
   FVPBufferConfigNative *pigeonResult = [[FVPBufferConfigNative alloc] init];
-  pigeonResult.preferredPeakBitRate = [GetNullableObjectAtIndex(list, 0) doubleValue];
-  pigeonResult.preferredForwardBufferDuration = [GetNullableObjectAtIndex(list, 1) doubleValue];
-  pigeonResult.canUseNetworkResourcesForLiveStreamingWhilePaused = [GetNullableObjectAtIndex(list, 2) boolValue];
+  pigeonResult.preferredPeakBitRate = GetNullableObjectAtIndex(list, 0);
+  pigeonResult.preferredForwardBufferDuration = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.canUseNetworkResourcesForLiveStreamingWhilePaused = GetNullableObjectAtIndex(list, 2);
   return pigeonResult;
 }
 + (nullable FVPBufferConfigNative *)nullableFromList:(NSArray<id> *)list {
@@ -126,9 +126,9 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 - (NSArray<id> *)toList {
   return @[
-    @(self.preferredPeakBitRate),
-    @(self.preferredForwardBufferDuration),
-    @(self.canUseNetworkResourcesForLiveStreamingWhilePaused),
+    self.preferredPeakBitRate ?: [NSNull null],
+    self.preferredForwardBufferDuration ?: [NSNull null],
+    self.canUseNetworkResourcesForLiveStreamingWhilePaused ?: [NSNull null],
   ];
 }
 @end
