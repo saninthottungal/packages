@@ -269,7 +269,17 @@ static void upgradeAudioSessionCategory(AVAudioSessionCategory requestedCategory
       headers.count == 0 ? nil : @{@"AVURLAssetHTTPHeaderFieldsKey" : headers};
   AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:options.uri]
                                           options:itemOptions];
-  return [AVPlayerItem playerItemWithAsset:asset];
+    
+    FVPBufferConfigNative *bufferConfig = options.bufferConfig;
+    
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
+    
+    /// setting buffer properties here:
+    item.preferredForwardBufferDuration = bufferConfig.preferredForwardBufferDuration;
+    item.preferredPeakBitRate = bufferConfig.preferredPeakBitRate;
+    item.canUseNetworkResourcesForLiveStreamingWhilePaused = bufferConfig.canUseNetworkResourcesForLiveStreamingWhilePaused;
+    
+  return item;
 }
 
 @end

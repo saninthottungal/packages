@@ -26,7 +26,7 @@
 @property(nonatomic) CFTimeInterval latestDuration;
 // Whether a new frame needs to be provided to the engine regardless of the current play/pause state
 // (e.g., after a seek while paused). If YES, the display link should continue to run until the next
-// frame is successfully provided.
+// frame is successfully provicreateForPlatformViewded.
 @property(nonatomic, assign) BOOL waitingForFrame;
 
 /// Ensures that the frame updater runs until a frame is rendered, regardless of play/pause state.
