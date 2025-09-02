@@ -29,7 +29,7 @@ class CreationOptions {
   CreationOptions({
     required this.uri,
     required this.httpHeaders,
-    this.bufferConfig = const BufferConfigNative(),
+    required this.bufferConfig,
   });
 
   String uri;
